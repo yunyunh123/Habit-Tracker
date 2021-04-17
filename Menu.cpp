@@ -5,6 +5,7 @@ Menu::Menu(float width, float height) {
     // handle error
   }
 
+
   menu[0].setFont(font);
   menu[0].setFillColor(sf::Color::Red);
   menu[0].setString("New Habit");
@@ -31,6 +32,36 @@ Menu::Menu(float width, float height) {
 
   selectedItemIndex = 0;
 }
+
+Menu::Menu(float width, float height, std::vector<Habits> hab) {
+  if (!font.loadFromFile("arial.ttf")) {
+    // handle error
+  }
+
+  int num = hab.size();
+
+  sf::Text list[num];
+  sf::FloatRect textRect;
+  // get the text on it
+  // decide how user clicks/enters in?
+
+  for (int i = 0; i < num; i++) {
+    list[i].setFont(font);
+    list[i].setFillColor(sf::Color::White);
+    list[i].setString(hab.at(i).name);
+    textRect = list[i].getLocalBounds();
+    list[i].setOrigin(textRect.left + textRect.width/2.0f,
+                      textRect.top + textRect.height/2.0f);
+    list[i].setPosition(sf::Vector2f(width / 2, height / (num + 1) * 1));
+
+  }
+
+
+  // max num of habits??
+  // return to menu
+
+}
+
 
 Menu::~Menu()
 {

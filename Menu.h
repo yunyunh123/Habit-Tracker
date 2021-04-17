@@ -1,11 +1,14 @@
 #pragma
 #include "SFML/Graphics.hpp"
+#include "Habits.h"
+
 
 #define NUM_ITEMS 3
 
 class Menu {
 public:
   Menu(float width, float height);
+  Menu(float width, float height, std::vector<Habits>);
   ~Menu();
 
   void draw(sf::RenderWindow &window);

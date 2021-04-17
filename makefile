@@ -2,5 +2,5 @@
 
 all: main
 
-main: main.cpp Menu.o Menu.h
-	g++ main.cpp Menu.o -o main -lsfml-graphics -lsfml-window -lsfml-system
+main: main.cpp Menu.o Menu.h Habits.o Habits.h
+	g++ main.cpp Menu.o Habits.o -o main -lsfml-graphics -lsfml-window -lsfml-system

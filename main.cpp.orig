@@ -13,46 +13,46 @@ void makeList() {
 
     while(window.pollEvent(event)) {
       switch(event.type) {
-        case sf::Event::KeyReleased:
-          switch (event.key.code) {
-            case sf::Keyboard::Up:
-              menu.MoveUp(1);
-              break;
+      case sf::Event::KeyReleased:
+        switch (event.key.code) {
+        case sf::Keyboard::Up:
+          menu.MoveUp(1);
+          break;
 
-            case sf::Keyboard::Down:
-              menu.MoveDown(1);
-              break;
-          }
+        case sf::Keyboard::Down:
+          menu.MoveDown(1);
+          break;
 
-        // case sf::Keyboard::Return:
-        //   switch (menu.GetPressedItem()) {
-        //   case 0:
-        //     std::cout << "User wants to input a new habit.\n";
-        //     break;
-        //   case 1: {
+          // case sf::Keyboard::Return:
+          //   switch (menu.GetPressedItem()) {
+          //   case 0:
+          //     std::cout << "User wants to input a new habit.\n";
+          //     break;
+          //   case 1: {
 
-        //     break;
-        //   }
+          //     break;
+          //   }
 
-        //   break;
-        // }
+          //   break;
+          // }
 
-        break;
+          break;
 
-      case sf::Event::Closed:
-        window.close();
-        break;
+        case sf::Event::Closed:
+          window.close();
+          break;
+        }
+
+        window.clear();
+
+        menu.drawList(window);
+
+        window.display();
       }
+
     }
-      window.clear();
-
-      menu.drawList(window);
-
-      window.display();
-    }
-
   }
-
+}
 
   int main() {
 
@@ -120,11 +120,3 @@ void makeList() {
 
     return 0;
   }
-
-  /*things we need to generalize:
-    the while loop with the switch statements
-    menu.cpp 
-      instead of having menu and list as separate, they could just be the same thing
-      but with different number of items
-
-  */

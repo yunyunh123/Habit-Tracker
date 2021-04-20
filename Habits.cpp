@@ -2,10 +2,14 @@
 
 //int Habits::num_hab = 0;
 
-Habits::Habits(std::string hab_name){
+Habits::Habits(std::string name, float amount, std::string units, int frequency){
 
-  name = hab_name;
+  this->name = name;
+  this->amount = amount;
+  this->units = units;
+  this->frequency = frequency;
   isDone = false;
+
 
   //num_hab++;
 

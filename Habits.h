@@ -4,10 +4,14 @@
 
 class Habits {
 public:
-  Habits(std::string hab_name);
+  Habits(std::string name, float amount, std::string units, int frequency);
   ~Habits();
   std::string name;
   bool isDone;
+  float amount = 0;
+  std::string units;
+  int frequency = 1;
+
   //static int num_hab;
 };
 

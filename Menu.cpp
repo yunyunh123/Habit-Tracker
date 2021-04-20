@@ -33,13 +33,14 @@ Menu::Menu(float width, float height) {
   selectedItemIndex = 0;
 }
 
-Menu::Menu(float width, float height, int test){ //std::vector<Habits> hab) {
+Menu::Menu(float width, float height, std::vector<Habits> hab){ //std::vector<Habits> hab) {
+  //replace int test parameter with Habits hab
    // std::cout << "works";
-  Habits hab1("Drink water"); // move back to main
-  Habits hab2("Do yoga");
-  std::vector<Habits> hab;
-  hab.push_back(hab1);
-  hab.push_back(hab2);
+  // Habits hab1("Drink water", 8, "cups", 1); // move back to main
+  // Habits hab2("Do yoga", 15, "min", 3);
+  // std::vector<Habits> hab;
+  // hab.push_back(hab1);
+  // hab.push_back(hab2);
 
 
   if (!font.loadFromFile("arial.ttf")) {
@@ -47,11 +48,13 @@ Menu::Menu(float width, float height, int test){ //std::vector<Habits> hab) {
   }
 
   int num = hab.size();
-
+  list.resize(num);
+  list_num = num;
   //sf::Text list[num];
   sf::FloatRect textRect;
   // get the text on it
   // decide how user clicks/enters in?
+
 
   for (int i = 0; i < num; i++) {
     list[i].setFont(font);
@@ -64,6 +67,7 @@ Menu::Menu(float width, float height, int test){ //std::vector<Habits> hab) {
     textRect = list[i].getLocalBounds();
     list[i].setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top + textRect.height/2.0f);
+    
     list[i].setPosition(sf::Vector2f(width / 2, height / (num + 1) * (i+1)));
 
   }
@@ -74,6 +78,49 @@ Menu::Menu(float width, float height, int test){ //std::vector<Habits> hab) {
 
 }
 
+Menu::Menu(float width, float height, Habits hab){
+  if (!font.loadFromFile("arial.ttf")) {
+    // handle error
+  }
+
+  int num = hab.frequency + 1;
+  sf::FloatRect textRect;
+  // sf::Text name;
+  // name.setFont(font);
+  // name.setFillColor(sf::Color::Blue);
+  std::string str = hab.name + " (" + std::to_string(hab.amount) + " " + hab.units + "/day)";
+  // name.setString(str);
+  // textRect = name.getLocalBounds();
+  // name.setOrigin(textRect.left + textRect.width/2.0f,
+  //               textRect.top + textRect.height/2.0f);
+  // name.setPosition(sf::Vector2f(width / 2, height / (num + 1) * 1));
+    pos.resize(num);
+  list_num = num;
+  list.resize(num);
+  std::string str2;
+  for (int i = 0; i < num; i++) {
+    if (i == 0) {
+      list[i].setFont(font);
+
+      list[i].setFillColor(sf::Color::Red);
+      list[i].setString(str);
+
+    }
+    else {
+      list[i].setFont(font);
+
+      list[i].setFillColor(sf::Color::White);
+      str2 = std::to_string(i) + ". ________" + hab.units;
+      list[i].setString(str2);
+    }
+    textRect = list[i].getLocalBounds();
+    list[i].setOrigin(textRect.left + textRect.width/2.0f,
+                      textRect.top + textRect.height/2.0f);
+    pos.at(i) = sf::Vector2f(width / 2, height / (num + 1) * (i+1));
+    list[i].setPosition(pos.at(i));
+  }
+
+}
 
 Menu::~Menu()
 {

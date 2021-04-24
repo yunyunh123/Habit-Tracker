@@ -76,7 +76,7 @@ void newHab(Habits habit) {
   Textbox text(30, sf::Color::White, true);
   text.setFont(arial);
   //sf::Vector2f pos = menu.pos.at(0);
-  text.centerText();
+  // text.centerText();
   text.setPosition(menu.pos.at(1));
   text.setLimit(true, 20);
 
@@ -148,6 +148,73 @@ std::vector<Habits> fileinput() {
   thisfile.close();
 
   return hab;
+}
+
+
+void updateavg(std::string name, float todaysdata) {
+
+  std::ifstream avgdata;
+
+  avgdata.open("avgdata.txt");
+  std::string word;
+  int count = 1;
+  std::string tempname;
+  bool isHabit = false;
+  float currentavg, newavg;
+  int daysentered;
+
+  while (avgdata >> word) {
+    if (count == 1) {
+      while (word.find('_',1) != std::string::npos) 
+        word.replace(word.find('_',1),1," ");
+      tempname = word;
+      if (tempname == name) 
+        isHabit = true;
+    }
+    else if (count == 2 && isHabit)
+      currentavg = std::stof(word);
+    else if (count == 3 && isHabit) {
+      daysentered = std::stoi(word);
+      break;
+    }
+    if (count == 3) 
+      count = 0;
+    count++; 
+  }
+
+  avgdata.close();
+
+  newavg = (currentavg*daysentered + todaysdata)/(daysentered + 1);
+  daysentered++;
+
+  avgdata.open("avgdata.txt");
+  std::string theline;
+  std::vector<string> updatedfile;
+
+  while (std::getline(avgdata, theline))
+    updatedfile.push_back(theline);
+
+  for (int i = 0; i < name.length(); i++) {
+    if (name.at(i) == ' ')
+      name.at(i) = '_';
+  }
+
+  for (int i = 0; i < updatedfile.size(); i++) {
+    if (updatedfile.at(i).find(name) != std::string::npos) {
+      updatedfile.at(i) = name + " " + std::to_string(newavg) 
+        + " " + std::to_string(daysentered);
+    }
+  }
+
+  avgdata.close();
+
+  std::ofstream newdata;
+  newdata.open("avgdata.txt", std::fstream::trunc);
+
+  for (string s : updatedfile) 
+    newdata << s << "\n";
+
+  newdata.close();
 }
 
 int main() {

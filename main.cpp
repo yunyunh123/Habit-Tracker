@@ -3,6 +3,7 @@
 //#include "Habits.h"
 #include <iostream>
 #include "Textbox.h"
+#include <fstream>
 
 void newHab(Habits habit);
 
@@ -110,14 +111,49 @@ void newHab(Habits habit) {
 
 }
 
+std::vector<Habits> fileinput() {
+  std::ifstream thisfile;
+
+  std::vector<Habits> hab;
+  Habits temp; 
+  int counter = 1;
+
+  thisfile.open("currenthabs.txt");
+  std::string word;
+  while (thisfile >> word) {
+    if (counter == 1) {
+      while (word.find('_',1) != std::string::npos) 
+        word.replace(word.find('_',1),1," ");
+      temp.name = word;
+    }
+    else if (counter == 2) 
+      temp.amount = std::stof(word);
+    else if (counter == 3) 
+      temp.units = word;
+    else if (counter == 4) 
+      temp.frequency = std::stoi(word);
+    else if (counter == 5) {
+      temp.isDone = (word == "true");
+      hab.push_back(temp);
+      counter = 0;
+    } // add another data point for daily average + today's amount? 
+    counter++;
+  }
+
+  for (int i = 0; i < hab.size(); i++) {
+    std::cout << hab.at(i).name << " " << hab.at(i).amount << " " << hab.at(i).units 
+      << " " << hab.at(i).frequency << " " << hab.at(i).isDone << "\n";
+  }
+
+  thisfile.close();
+
+  return hab;
+}
+
 int main() {
 
-  Habits hab1("Drink water", 8, "cups", 1); // move back to main
-  Habits hab2("Do yoga", 15, "min", 3);
   std::vector<Habits> hab;
-  hab.push_back(hab1);
-  hab.push_back(hab2);
-
+  hab = fileinput();
  // hab1.name = "Do yoga";
 
 
@@ -183,5 +219,4 @@ int main() {
     menu.cpp 
       instead of having menu and list as separate, they could just be the same thing
       but with different number of items
-
   */

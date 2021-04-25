@@ -4,16 +4,15 @@
 
 class Habits {
 public:
+  // Constructors and Destructors
   Habits() {}
   Habits(std::string name, float amount, std::string units, int frequency);
   ~Habits();
+
+  // Public members
   std::string name;
-  bool isDone;
-  float amount = 0;
   std::string units;
   int frequency = 1;
-
-  //static int num_hab;
+  float amount = 0;
+  bool isDone = false;
 };
-
-//Habits::num_hab = 0;

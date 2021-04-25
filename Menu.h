@@ -2,25 +2,28 @@
 #include "SFML/Graphics.hpp"
 #include "Habits.h"
 #include <vector>
+#include <string>
 
 #define NUM_ITEMS 3
 
 class Menu {
 public:
-  Menu(float width, float height);
-  Menu(float width, float height, std::vector<Habits>);//std::vector<Habits>);
-  Menu(float width, float height, Habits hab);
+  // Constructor and Destructor
+  Menu(float width, float height, std::vector<std::string> items);
   ~Menu();
+
+  // Public functions
   void drawMenu(sf::RenderWindow &window);
-  void drawList(sf::RenderWindow &window);
-  void MoveUp(int n);
-  void MoveDown(int n);
+  void MoveUp();
+  void MoveDown();
   int GetPressedItem() { return selectedItemIndex; }
-  int list_num; // generalize later
+
+  // Public member
   std::vector<sf::Vector2f> pos;
 private:
+  // Private members
+  int num_items;
   int selectedItemIndex;
   sf::Font font;
-  sf::Text menu[NUM_ITEMS];
-  std::vector<sf::Text> list; // generalize later
+  std::vector<sf::Text> menu;
 };

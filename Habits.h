@@ -4,6 +4,7 @@
 
 class Habits {
 public:
+  Habits() {}
   Habits(std::string name, float amount, std::string units, int frequency);
   ~Habits();
   std::string name;

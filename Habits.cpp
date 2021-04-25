@@ -15,7 +15,7 @@ Habits::Habits(std::string name, float amount, std::string units, int frequency)
 
 }
 
-Habits:: ~Habits() {
+Habits::~Habits() {
 
 }
 

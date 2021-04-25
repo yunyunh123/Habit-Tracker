@@ -114,10 +114,10 @@ Menu::Menu(float width, float height, Habits hab){
       list[i].setString(str2);
     }
     textRect = list[i].getLocalBounds();
+    pos.at(i) = sf::Vector2f(width / 2, height / (num + 1) * (i+1));
     list[i].setOrigin(textRect.left + textRect.width/2.0f,
                       textRect.top + textRect.height/2.0f);
-    pos.at(i) = sf::Vector2f(width / 2, height / (num + 1) * (i+1));
-    list[i].setPosition(pos.at(i));
+    list[i].setPosition(sf::Vector2f(width / 2, height / (num + 1) * (i+1)));
   }
 
 }

@@ -10,6 +10,7 @@
 
 const int WIDTH = 600;
 const int HEIGHT = 600;
+const int MAX_HAB = 5;
 
 // List of functions
 void getMenuWindow(int width, int height, std::string name, std::vector<std::string> list,
@@ -114,7 +115,7 @@ void getMenuWindow(int width, int height, Habits habit) {
   sf::Font arial;
   arial.loadFromFile("arial.ttf");
   std::vector<Textbox> texts;
-  sf::Vector2f center(-50.f, -30.f); // to center the textbox
+  sf::Vector2f center(-70.f, -30.f); // to center the textbox
 
   for (int i = 0; i < num_freq; i++) {
     if (i == 0)
@@ -173,25 +174,22 @@ void getMenuWindow(int width, int height, Habits habit) {
 
   // Calculates total amount inputted by user and updates avgdata.txt
   float runsum = 0;
-  for (int i = 0; i < num_freq; i++) {
-    try {
+  try {
+    for (int i = 0; i < num_freq; i++) {
       runsum += std::stof(texts.at(i).getText());
-    } catch(const std::invalid_argument& ia) {
-      std::cerr << "Invalid arguments. Please enter floats.\n";
-      userTrackHabits(habit);
     }
+    updateavg(habit.name, runsum);
+  } catch(const std::invalid_argument& ia) {
+    std::cerr << "Invalid arguments. Please enter floats.\n";
+    userTrackHabits(habit);
   }
-  updateavg(habit.name, runsum);
 }
 
 void newHabit() {
 
   std::vector<Habits> habs = fileinput();
   int size = habs.size();
-  if (size < 5) {
-
-  }
-
+  if (size < MAX_HAB) {
   sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "New Habit (press up or down key to type in textboxes)");
   std::vector<Textbox> textbox;
   int num = 4;
@@ -355,17 +353,20 @@ void newHabit() {
     string entry = habitname + " " + std::to_string(amount) + " " + unitname + " " + std::to_string(freq) + " " + "false";
     std::ofstream myfile;
     myfile.open("currenthabs.txt", std::fstream::app);
-    myfile << entry << '\n';
+    myfile << entry << "\n";
     myfile.close();
 
     std::ofstream avgdata;
     avgdata.open("avgdata.txt", std::fstream::app);
-    avgdata << habitname + " 0 0";
+    entry = habitname + " 0 0";
+    avgdata << entry << "\n";
+    avgdata.close();
     }
   } catch(const std::invalid_argument& ia) {
     std::cerr << "Invalid arguments.\n";
     newHabit();
   }
+}
 }
 
 void userTrackHabits(Habits habit) {

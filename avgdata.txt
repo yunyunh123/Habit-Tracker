@@ -1,3 +1,4 @@
-Do_yoga 18538.650391 4
-Drink_water 8212.207031 3
-text 61560.000000 2
+Do_yoga 107.773338 12
+Drink_water 11.402500 4
+Read 32.500000 2
+sdfdsf 0 0

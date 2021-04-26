@@ -115,7 +115,7 @@ void getMenuWindow(int width, int height, Habits habit) {
   sf::Font arial;
   arial.loadFromFile("arial.ttf");
   std::vector<Textbox> texts;
-  sf::Vector2f center(-90.f, -30.f); // to center the textbox
+  sf::Vector2f center(-70.f, -30.f); // to center the textbox
 
   for (int i = 0; i < num_freq; i++) {
     if (i == 0)
@@ -174,15 +174,15 @@ void getMenuWindow(int width, int height, Habits habit) {
 
   // Calculates total amount inputted by user and updates avgdata.txt
   float runsum = 0;
-  for (int i = 0; i < num_freq; i++) {
-    try {
+  try {
+    for (int i = 0; i < num_freq; i++) {
       runsum += std::stof(texts.at(i).getText());
-    } catch(const std::invalid_argument& ia) {
-      std::cerr << "Invalid arguments. Please enter floats.\n";
-      userTrackHabits(habit);
     }
+    updateavg(habit.name, runsum);
+  } catch(const std::invalid_argument& ia) {
+    std::cerr << "Invalid arguments. Please enter floats.\n";
+    userTrackHabits(habit);
   }
-  updateavg(habit.name, runsum);
 }
 
 void newHabit() {
@@ -190,183 +190,183 @@ void newHabit() {
   std::vector<Habits> habs = fileinput();
   int size = habs.size();
   if (size < MAX_HAB) {
-  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "New Habit (press up or down key to type in textboxes)");
-  std::vector<Textbox> textbox;
-  int num = 4;
-  float x_pos_textbox = 350;
-  float y_pos_textbox = 100;
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "New Habit (press up or down key to type in textboxes)");
+    std::vector<Textbox> textbox;
+    int num = 4;
+    float x_pos_textbox = 350;
+    float y_pos_textbox = 100;
 
-  // Setting up textboxes
-  sf::Font font;
-  font.loadFromFile("arial.ttf");
-  for (int i = 0; i < num; i++) {
-    textbox.push_back(Textbox(30, sf::Color::White, false));
-    textbox.at(i).setFont(font);
-    textbox.at(i).setPosition({x_pos_textbox, y_pos_textbox + i * 100});
-    textbox.at(i).setLimit(true, 12);
-
-    if(i == 0)
-      textbox.at(i).setSelected(true);
-    else
-      textbox.at(i).setSelected(false);
-  }
-
-  // Setting up texts
-  int index = 1;
-
-  while (window.isOpen()) {
-    // displaying title
-    string newhabit = "NEW HABIT";
-    string nameH = "Habit Name:";
-    string amountH = "Amount:\n(0<float)";
-    string unitH = "Units:";
-    string timingH = "Frequency:\n(0 < int <= 5)";
-    string instruction1 = "Press up and down key to select textbox.";
-    string instruction2 = "Fill out all 4 boxes. Close window when done.";
-    // displaying in window using text_dash info
-    sf::Text text1(newhabit, font);
-    sf::Text text2(nameH, font, 25);
-    sf::Text text3(amountH, font, 25);
-    sf::Text text4(unitH, font, 25);
-    sf::Text text5(timingH, font, 25);
-    sf::Text text6(instruction1, font, 20);
-    sf::Text text7(instruction2, font, 20);
-    // creating 4 text boxes
-    sf::RectangleShape name(sf::Vector2f(200, 50));
-    sf::RectangleShape amount(sf::Vector2f(200, 50));
-    sf::RectangleShape unit(sf::Vector2f(200, 50));
-    sf::RectangleShape timing(sf::Vector2f(200, 50));
-
-    // customizing their colors
-    name.setFillColor(sf::Color::Transparent);
-    amount.setFillColor(sf::Color::Transparent);
-    unit.setFillColor(sf::Color::Transparent);
-    timing.setFillColor(sf::Color::Transparent);
-
-    // setting their position to be contralized
-    name.setPosition(350.f, 100.f);
-    amount.setPosition(350.f, 200.f);
-    unit.setPosition(350.f, 300.f);
-    timing.setPosition(350.f, 400.f);
-
-    text1.setPosition(200.f, 30.f);
-    text2.setPosition(50.f, 100.f);
-    text3.setPosition(50.f, 200.f);
-    text4.setPosition(50.f, 300.f);
-    text5.setPosition(50.f, 400.f);
-    text6.setPosition(75.f, 500.f);
-    text7.setPosition(75.f, 550.f);
-    name.setOutlineThickness(5);
-    name.setOutlineColor(sf::Color::White);
-    amount.setOutlineThickness(5);
-    amount.setOutlineColor(sf::Color::White);
-    unit.setOutlineThickness(5);
-    unit.setOutlineColor(sf::Color::White);
-    timing.setOutlineThickness(5);
-    timing.setOutlineColor(sf::Color::White);
-
+    // Setting up textboxes
+    sf::Font font;
+    font.loadFromFile("arial.ttf");
     for (int i = 0; i < num; i++) {
-      textbox.at(i).drawTo(window);
+      textbox.push_back(Textbox(30, sf::Color::White, false));
+      textbox.at(i).setFont(font);
+      textbox.at(i).setPosition({x_pos_textbox, y_pos_textbox + i * 100});
+      textbox.at(i).setLimit(true, 12);
+
+      if(i == 0)
+        textbox.at(i).setSelected(true);
+      else
+        textbox.at(i).setSelected(false);
     }
 
-    window.draw(name);
-    window.draw(amount);
-    window.draw(unit);
-    window.draw(timing);
-    window.draw(text1);
-    window.draw(text2);
-    window.draw(text3);
-    window.draw(text4);
-    window.draw(text5);
-    window.draw(text6);
-    window.draw(text7);
+    // Setting up texts
+    int index = 1;
 
-    window.display();
-    sf::Event Event;
+    while (window.isOpen()) {
+      // displaying title
+      string newhabit = "NEW HABIT";
+      string nameH = "Habit Name:";
+      string amountH = "Amount:\n(0<float)";
+      string unitH = "Units:";
+      string timingH = "Frequency:\n(0 < int <= 5)";
+      string instruction1 = "Press up and down key to select textbox.";
+      string instruction2 = "Fill out all 4 boxes. Close window when done.";
+      // displaying in window using text_dash info
+      sf::Text text1(newhabit, font);
+      sf::Text text2(nameH, font, 25);
+      sf::Text text3(amountH, font, 25);
+      sf::Text text4(unitH, font, 25);
+      sf::Text text5(timingH, font, 25);
+      sf::Text text6(instruction1, font, 20);
+      sf::Text text7(instruction2, font, 20);
+      // creating 4 text boxes
+      sf::RectangleShape name(sf::Vector2f(200, 50));
+      sf::RectangleShape amount(sf::Vector2f(200, 50));
+      sf::RectangleShape unit(sf::Vector2f(200, 50));
+      sf::RectangleShape timing(sf::Vector2f(200, 50));
 
-    while (window.pollEvent(Event)) {
-      if (Event.type == sf::Event::Closed) {
-        window.close();
+      // customizing their colors
+      name.setFillColor(sf::Color::Transparent);
+      amount.setFillColor(sf::Color::Transparent);
+      unit.setFillColor(sf::Color::Transparent);
+      timing.setFillColor(sf::Color::Transparent);
+
+      // setting their position to be contralized
+      name.setPosition(350.f, 100.f);
+      amount.setPosition(350.f, 200.f);
+      unit.setPosition(350.f, 300.f);
+      timing.setPosition(350.f, 400.f);
+
+      text1.setPosition(200.f, 30.f);
+      text2.setPosition(50.f, 100.f);
+      text3.setPosition(50.f, 200.f);
+      text4.setPosition(50.f, 300.f);
+      text5.setPosition(50.f, 400.f);
+      text6.setPosition(75.f, 500.f);
+      text7.setPosition(75.f, 550.f);
+      name.setOutlineThickness(5);
+      name.setOutlineColor(sf::Color::White);
+      amount.setOutlineThickness(5);
+      amount.setOutlineColor(sf::Color::White);
+      unit.setOutlineThickness(5);
+      unit.setOutlineColor(sf::Color::White);
+      timing.setOutlineThickness(5);
+      timing.setOutlineColor(sf::Color::White);
+
+      for (int i = 0; i < num; i++) {
+        textbox.at(i).drawTo(window);
       }
 
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
-        if (index == 4) {
-          textbox.at(3).setSelected(false);
-          index --;
-          textbox.at(2).setSelected(true);
-        } else if (index == 3) {
-          textbox.at(2).setSelected(false);
-          index --;
-          textbox.at(1).setSelected(true);
-        } else if (index == 2) {
-          textbox.at(1).setSelected(false);
-          index --;
-          textbox.at(0).setSelected(true);
+      window.draw(name);
+      window.draw(amount);
+      window.draw(unit);
+      window.draw(timing);
+      window.draw(text1);
+      window.draw(text2);
+      window.draw(text3);
+      window.draw(text4);
+      window.draw(text5);
+      window.draw(text6);
+      window.draw(text7);
+
+      window.display();
+      sf::Event Event;
+
+      while (window.pollEvent(Event)) {
+        if (Event.type == sf::Event::Closed) {
+          window.close();
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
+          if (index == 4) {
+            textbox.at(3).setSelected(false);
+            index --;
+            textbox.at(2).setSelected(true);
+          } else if (index == 3) {
+            textbox.at(2).setSelected(false);
+            index --;
+            textbox.at(1).setSelected(true);
+          } else if (index == 2) {
+            textbox.at(1).setSelected(false);
+            index --;
+            textbox.at(0).setSelected(true);
+          }
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+          if (index == 1) {
+            textbox.at(0).setSelected(false);
+            index ++;
+            textbox.at(1).setSelected(true);
+          } else if (index == 2) {
+            textbox.at(1).setSelected(false);
+            index ++;
+            textbox.at(2).setSelected(true);
+          } else if (index == 3) {
+            textbox.at(2).setSelected(false);
+            index ++;
+            textbox.at(3).setSelected(true);
+          }
+        }
+
+        if (Event.type == sf::Event::TextEntered) {
+          for (int i = 0; i < num; i++) {
+            textbox.at(i).typedOn(Event);
+          }
+        }
+        window.clear(sf::Color::Black);
       }
 
-      if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
-        if (index == 1) {
-          textbox.at(0).setSelected(false);
-          index ++;
-          textbox.at(1).setSelected(true);
-        } else if (index == 2) {
-          textbox.at(1).setSelected(false);
-          index ++;
-          textbox.at(2).setSelected(true);
-        } else if (index == 3) {
-          textbox.at(2).setSelected(false);
-          index ++;
-          textbox.at(3).setSelected(true);
-        }
-      }
-
-      if (Event.type == sf::Event::TextEntered) {
-        for (int i = 0; i < num; i++) {
-          textbox.at(i).typedOn(Event);
-        }
-      }
-      window.clear(sf::Color::Black);
     }
 
-  }
+    string habitname = textbox.at(0).getText();
 
-  string habitname = textbox.at(0).getText();
+    for (int i = 0; i < habitname.length(); i++) {
+      if (habitname.at(i) == ' ')
+        habitname.at(i) = '_';
+    }
 
-  for (int i = 0; i < habitname.length(); i++) {
-    if (habitname.at(i) == ' ')
-      habitname.at(i) = '_';
-  }
+    string unitname = textbox.at(2).getText();
+    float amount;
+    int freq;
 
-  string unitname = textbox.at(2).getText();
-  float amount;
-  int freq;
+    try {
+      amount = std::stof(textbox.at(1).getText());
+      freq = std::stoi(textbox.at(3).getText());
 
-  try {
-    amount = std::stof(textbox.at(1).getText());
-    freq = std::stoi(textbox.at(3).getText());
+      if (amount <= 0 or freq <= 0 or freq > 5) {
+        newHabit();
+      } else {
+        // Store entries in currenthabs.txt and avgdata.txt
+        string entry = habitname + " " + std::to_string(amount) + " " + unitname + " " + std::to_string(freq) + " " + "false";
+        std::ofstream myfile;
+        myfile.open("currenthabs.txt", std::fstream::app);
+        myfile << entry << "\n";
+        myfile.close();
 
-    if (amount <= 0 or freq <= 0 or freq > 5){
+        std::ofstream avgdata;
+        avgdata.open("avgdata.txt", std::fstream::app);
+        entry = habitname + " 0 0";
+        avgdata << entry << "\n";
+        avgdata.close();
+      }
+    } catch(const std::invalid_argument& ia) {
+      std::cerr << "Invalid arguments.\n";
       newHabit();
-    } else {
-    // Store entries in currenthabs.txt and avgdata.txt
-    string entry = habitname + " " + std::to_string(amount) + " " + unitname + " " + std::to_string(freq) + " " + "false";
-    std::ofstream myfile;
-    myfile.open("currenthabs.txt", std::fstream::app);
-    myfile << entry << "\n";
-    myfile.close();
-
-    std::ofstream avgdata;
-    avgdata.open("avgdata.txt", std::fstream::app);
-    entry = habitname + " 0 0";
-    avgdata << entry << "\n";
-    avgdata.close();
     }
-  } catch(const std::invalid_argument& ia) {
-    std::cerr << "Invalid arguments.\n";
-    newHabit();
   }
-}
 }
 
 void userTrackHabits(Habits habit) {

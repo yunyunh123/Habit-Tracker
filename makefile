@@ -1,4 +1,3 @@
-# Copyright 2021 Julia Hua jhua2@bu.edu
 
 all: main
 

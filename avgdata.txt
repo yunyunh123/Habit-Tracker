@@ -1,4 +1,2 @@
-Do_yoga 107.773338 12
-Drink_water 11.402500 4
-Read 32.500000 2
-sdfdsf 0 0
+Do_yoga 63.500000 1
+Sleep 9.500000 1

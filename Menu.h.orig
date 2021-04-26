@@ -7,7 +7,7 @@
 #define NUM_ITEMS 3
 
 class Menu {
- public:
+public:
   // Constructor and Destructor
   Menu(float width, float height, std::vector<std::string> items);
   ~Menu();
@@ -16,13 +16,11 @@ class Menu {
   void drawMenu(sf::RenderWindow &window);
   void MoveUp();
   void MoveDown();
-  int GetPressedItem() {
-    return selectedItemIndex;
-  }
+  int GetPressedItem() { return selectedItemIndex; }
 
   // Public member
   std::vector<sf::Vector2f> pos;
- private:
+private:
   // Private members
   int num_items;
   int selectedItemIndex;

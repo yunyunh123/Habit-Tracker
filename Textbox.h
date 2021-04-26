@@ -27,7 +27,6 @@ class Textbox {
     }
   }
 
-
   void setFont(sf::Font &font) {
     textbox.setFont(font);
   }
@@ -68,11 +67,11 @@ class Textbox {
   void typedOn(sf::Event input) {
     if (isSelected) {
       int charTyped = input.text.unicode;
-      if(charTyped < 128) {
-        if(hasLimit) {
-          if(text.str().length() <= limit) {
+      if (charTyped < 128) {
+        if (hasLimit) {
+          if (text.str().length() <= limit) {
             inputLogic(charTyped);
-          } else if(text.str().length() > limit && charTyped == DELETE_KEY) {
+          } else if (text.str().length() > limit && charTyped == DELETE_KEY) {
             deletelastChar();
           }
         } else {
@@ -111,5 +110,4 @@ class Textbox {
     text << newT;
     textbox.setString(text.str());
   }
-
 };

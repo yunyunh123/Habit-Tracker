@@ -1,4 +1,2 @@
-Do_yoga 60.000000 minutes 3 false
-Drink_water 8.000000 cups 2 false
-Read 20.000000 pages 3 false
-sdfdsf 12.000000 mL 2 false
+Do_yoga 50.000000 minutes 2 false
+Sleep 9.000000 hours 1 false

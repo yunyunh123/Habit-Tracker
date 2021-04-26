@@ -13,8 +13,9 @@ const int HEIGHT = 600;
 const int MAX_HAB = 5;
 
 // List of functions
-void getMenuWindow(int width, int height, std::string name, std::vector<std::string> list,
-                   bool ifnextlist, std::vector<std::function<void(void)>> nextlist);
+void getMenuWindow(int width, int height, std::string name,
+                   std::vector<std::string> list, bool ifnextlist,
+                   std::vector<std::function<void(void)>> nextlist);
 void getMenuWindow(int width, int height, Habits habit);
 void newHabit();
 void userTrackHabits(Habits habit);
@@ -26,9 +27,16 @@ std::vector<Habits> fileinput();
 
 // Main
 int main() {
-  std::vector<std::string> list = {"New Habit (max: 5)", "Track Habit(s)", "View Habit Progress"};
-  std::vector<std::function<void(void)>> functions{newHabit, trackHabits, viewProgress};
-  getMenuWindow(WIDTH, HEIGHT, "Menu (press up or down key, press enter to select option)", list, true, functions);
+  std::vector<std::string> list = {"New Habit (max: 5)",
+                                   "Track Habit(s)",
+                                   "View Habit Progress"};
+
+  std::vector<std::function<void(void)>> functions
+    {newHabit, trackHabits, viewProgress};
+
+  getMenuWindow(WIDTH, HEIGHT,
+    "Menu (press up or down key, press enter to select option)",
+    list, true, functions);
 
   return 0;
 }
@@ -39,9 +47,12 @@ int main() {
       - nextlist (if any function exists in the vector "nextlist")
       - userTrackHabits (if no function exists in the vector "nextlist")
 */
-void getMenuWindow(int width, int height, std::string name, std::vector<std::string> list,
-                   bool ifnextlist, std::vector<std::function<void(void)>> nextlist) {
-  sf::RenderWindow window(sf::VideoMode(width, height), name, sf::Style::Titlebar | sf::Style::Close);
+void getMenuWindow(int width, int height, std::string name,
+                   std::vector<std::string> list, bool ifnextlist,
+                   std::vector<std::function<void(void)>> nextlist) {
+  sf::RenderWindow window(sf::VideoMode(width, height),
+    name,sf::Style::Titlebar | sf::Style::Close);
+
   Menu menu(width, height, list);
 
   int num = list.size();
@@ -57,18 +68,19 @@ void getMenuWindow(int width, int height, std::string name, std::vector<std::str
         - keyboard input: Up, Down, Return
         - window closed by clicking X button in title bar
     */
-    while(window.pollEvent(event)) {
-      switch(event.type) {
+    while (window.pollEvent(event)) {
+      switch (event.type) {
       case sf::Event::KeyReleased:
-        if(event.key.code == sf::Keyboard::Up) {
+        if (event.key.code == sf::Keyboard::Up) {
           menu.MoveUp();
         } else if (event.key.code == sf::Keyboard::Down) {
           menu.MoveDown();
         } else if ((event.key.code == sf::Keyboard::Return) && (ifnextlist == true)) {
           index = menu.GetPressedItem();
 
-          if(not nextlist.empty()) {
-            for(int i = 0; i < num; i++) {
+          // Determines which function(s) to call
+          if (not nextlist.empty()) {
+            for (int i = 0; i < num; i++) {
               if (index == i) {
                 nextlist.at(i)();
               }
@@ -89,14 +101,15 @@ void getMenuWindow(int width, int height, std::string name, std::vector<std::str
     window.clear();
     menu.drawMenu(window);
     window.display();
-
   }
 }
 
 // Creates menu window for a habit that allows for text input
 void getMenuWindow(int width, int height, Habits habit) {
-  std::string name = habit.name + " (enter value with at least 1 decimal place and close window when done)";
-  sf::RenderWindow window(sf::VideoMode(width, height), name, sf::Style::Titlebar | sf::Style::Close);
+  std::string name = habit.name +
+      " (enter value with at least 1 decimal place and close window when done)";
+  sf::RenderWindow window(sf::VideoMode(width, height),
+    name, sf::Style::Titlebar | sf::Style::Close);
 
   // Creating the list to be displayed in the menu
   std::vector<std::string> list;
@@ -104,7 +117,8 @@ void getMenuWindow(int width, int height, Habits habit) {
   int num_list = num_freq + 1;
   list.resize(num_list);
 
-  list.at(0) = habit.name + " (" + std::to_string(habit.amount) + " " + habit.units + "/day)";
+  list.at(0) = habit.name + " (" + std::to_string(habit.amount)
+               + " " + habit.units + "/day)";
   for (int i = 1; i <= num_freq; i++) {
     list.at(i) = std::to_string(i) + ". ________" + habit.units;
   }
@@ -115,7 +129,7 @@ void getMenuWindow(int width, int height, Habits habit) {
   sf::Font arial;
   arial.loadFromFile("arial.ttf");
   std::vector<Textbox> texts;
-  sf::Vector2f center(-70.f, -30.f); // to center the textbox
+  sf::Vector2f center(-70.f, -30.f);  // to center the textbox
 
   for (int i = 0; i < num_freq; i++) {
     if (i == 0)
@@ -180,23 +194,30 @@ void getMenuWindow(int width, int height, Habits habit) {
     }
     updateavg(habit.name, runsum);
   } catch(const std::invalid_argument& ia) {
+    // Outputs error message and recalls function
     std::cerr << "Invalid arguments. Please enter floats.\n";
     userTrackHabits(habit);
   }
 }
 
+/* Creates a window that allows for text input:
+    - Habit name
+    - Amount
+    - Units
+    - Frequency
+*/
 void newHabit() {
-
   std::vector<Habits> habs = fileinput();
   int size = habs.size();
   if (size < MAX_HAB) {
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "New Habit (press up or down key to type in textboxes)");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT),
+        "New Habit (press up or down key to type in textboxes)");
     std::vector<Textbox> textbox;
     int num = 4;
     float x_pos_textbox = 350;
     float y_pos_textbox = 100;
 
-    // Setting up textboxes
+    // Setting up 4 textboxes for each requested item
     sf::Font font;
     font.loadFromFile("arial.ttf");
     for (int i = 0; i < num; i++) {
@@ -205,13 +226,13 @@ void newHabit() {
       textbox.at(i).setPosition({x_pos_textbox, y_pos_textbox + i * 100});
       textbox.at(i).setLimit(true, 12);
 
-      if(i == 0)
+      if (i == 0)
         textbox.at(i).setSelected(true);
       else
         textbox.at(i).setSelected(false);
     }
 
-    // Setting up texts
+    // Setting up texts: Prompts and Instructions
     int index = 1;
 
     while (window.isOpen()) {
@@ -223,6 +244,7 @@ void newHabit() {
       string timingH = "Frequency:\n(0 < int <= 5)";
       string instruction1 = "Press up and down key to select textbox.";
       string instruction2 = "Fill out all 4 boxes. Close window when done.";
+
       // displaying in window using text_dash info
       sf::Text text1(newhabit, font);
       sf::Text text2(nameH, font, 25);
@@ -231,7 +253,8 @@ void newHabit() {
       sf::Text text5(timingH, font, 25);
       sf::Text text6(instruction1, font, 20);
       sf::Text text7(instruction2, font, 20);
-      // creating 4 text boxes
+
+      // creating 4 rectangular boxes to outline the textbox
       sf::RectangleShape name(sf::Vector2f(200, 50));
       sf::RectangleShape amount(sf::Vector2f(200, 50));
       sf::RectangleShape unit(sf::Vector2f(200, 50));
@@ -243,7 +266,7 @@ void newHabit() {
       unit.setFillColor(sf::Color::Transparent);
       timing.setFillColor(sf::Color::Transparent);
 
-      // setting their position to be contralized
+      // setting their position to be centralized
       name.setPosition(350.f, 100.f);
       amount.setPosition(350.f, 200.f);
       unit.setPosition(350.f, 300.f);
@@ -265,6 +288,7 @@ void newHabit() {
       timing.setOutlineThickness(5);
       timing.setOutlineColor(sf::Color::White);
 
+      // Drawing texts and textboxes to window
       for (int i = 0; i < num; i++) {
         textbox.at(i).drawTo(window);
       }
@@ -282,6 +306,8 @@ void newHabit() {
       window.draw(text7);
 
       window.display();
+
+      // Checks for events: Up and Down keys, Text entered, Close button
       sf::Event Event;
 
       while (window.pollEvent(Event)) {
@@ -292,15 +318,15 @@ void newHabit() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)) {
           if (index == 4) {
             textbox.at(3).setSelected(false);
-            index --;
+            index--;
             textbox.at(2).setSelected(true);
           } else if (index == 3) {
             textbox.at(2).setSelected(false);
-            index --;
+            index--;
             textbox.at(1).setSelected(true);
           } else if (index == 2) {
             textbox.at(1).setSelected(false);
-            index --;
+            index--;
             textbox.at(0).setSelected(true);
           }
         }
@@ -308,15 +334,15 @@ void newHabit() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
           if (index == 1) {
             textbox.at(0).setSelected(false);
-            index ++;
+            index++;
             textbox.at(1).setSelected(true);
           } else if (index == 2) {
             textbox.at(1).setSelected(false);
-            index ++;
+            index++;
             textbox.at(2).setSelected(true);
           } else if (index == 3) {
             textbox.at(2).setSelected(false);
-            index ++;
+            index++;
             textbox.at(3).setSelected(true);
           }
         }
@@ -328,34 +354,34 @@ void newHabit() {
         }
         window.clear(sf::Color::Black);
       }
-
     }
 
+    // Stores user inputs into data files
     string habitname = textbox.at(0).getText();
-
     for (int i = 0; i < habitname.length(); i++) {
       if (habitname.at(i) == ' ')
         habitname.at(i) = '_';
     }
-
     string unitname = textbox.at(2).getText();
     float amount;
     int freq;
 
-    try {
+    try {  // error checks for any invalid inputs
       amount = std::stof(textbox.at(1).getText());
       freq = std::stoi(textbox.at(3).getText());
 
       if (amount <= 0 or freq <= 0 or freq > 5) {
         newHabit();
       } else {
-        // Store entries in currenthabs.txt and avgdata.txt
-        string entry = habitname + " " + std::to_string(amount) + " " + unitname + " " + std::to_string(freq) + " " + "false";
+        // Store entries in currenthabs.txt
+        string entry = habitname + " " + std::to_string(amount) + " " 
+                     + unitname + " " + std::to_string(freq) + " " + "false";
         std::ofstream myfile;
         myfile.open("currenthabs.txt", std::fstream::app);
         myfile << entry << "\n";
         myfile.close();
 
+        // Store entries in avgdata.txt
         std::ofstream avgdata;
         avgdata.open("avgdata.txt", std::fstream::app);
         entry = habitname + " 0 0";
@@ -363,16 +389,22 @@ void newHabit() {
         avgdata.close();
       }
     } catch(const std::invalid_argument& ia) {
+      // Sends error message and calls the function again
       std::cerr << "Invalid arguments.\n";
       newHabit();
     }
   }
 }
 
+// Creates new window that prompts user
+// to record their progress for a specfic habit
 void userTrackHabits(Habits habit) {
   getMenuWindow(WIDTH, HEIGHT, habit);
 }
 
+/* Creates a window where all current habits are listed.
+   User can choose a specific habit to track/record progress.
+*/
 void trackHabits() {
   std::vector<Habits> habit_list;
   habit_list = fileinput();
@@ -383,11 +415,15 @@ void trackHabits() {
     list.push_back(i.name);
 
   std::vector<std::function<void(void)>> empty{};
-  getMenuWindow(WIDTH, HEIGHT, "Track Habit(s) (press up or down key, press enter to select option)",
+  getMenuWindow(WIDTH, HEIGHT,
+                "Track Habit(s) (press up or down key, press enter to select option)",
                 list, true, empty);
 }
 
+// Creates a window that displays daily averages
 void viewProgress() {
+  // Creating list to be displayed in the menu.
+  // Retrieves information from currenthabs.txt and avgdata.txt
   std::vector<std::string> list = {"Progress: daily averages"};
   std::vector<Habits> habit_list;
   habit_list = fileinput();
@@ -401,15 +437,16 @@ void viewProgress() {
     list.push_back(line);
   }
 
-
-  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Progress (daily averages)",
+  // Creates window and menu that draws the list
+  sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT),
+                          "Progress (daily averages)",
                           sf::Style::Titlebar | sf::Style::Close);
   Menu menu(WIDTH, HEIGHT, list);
 
-  while(window.isOpen()) {
+  while (window.isOpen()) {
     sf::Event event;
 
-    while(window.pollEvent(event)) {
+    while (window.pollEvent(event)) {
       if (event.type == sf::Event::Closed)
         window.close();
     }
@@ -420,32 +457,36 @@ void viewProgress() {
   }
 }
 
-// Returns the current habits that the user wants to track
+/* Reads from the file "currenthabs.txt" where the data for each habit 
+is stored on separate lines, with spaces separating each data point 
+then returns a vector of all current habits */
 std::vector<Habits> fileinput() {
   std::ifstream thisfile;
 
   std::vector<Habits> hab;
   Habits temp;
   int counter = 1;
-
   thisfile.open("currenthabs.txt");
   std::string word;
+
+  // Reads from the file word by word
   while (thisfile >> word) {
+    // counts through each data point and assigns them to the appropriate object
     if (counter == 1) {
       while (word.find('_', 1) != std::string::npos)
         word.replace(word.find('_', 1), 1, " ");
       temp.name = word;
-    } else if (counter == 2)
+    } else if (counter == 2) {
       temp.amount = std::stof(word);
-    else if (counter == 3)
+    } else if (counter == 3) {
       temp.units = word;
-    else if (counter == 4)
+    } else if (counter == 4) {
       temp.frequency = std::stoi(word);
-    else if (counter == 5) {
+    } else if (counter == 5) {
       temp.isDone = (word == "true");
       hab.push_back(temp);
       counter = 0;
-    } // add another data point for daily average + today's amount?
+    }
     counter++;
   }
 
@@ -486,9 +527,9 @@ float getCurrentAvg(std::string name) {
   return currentavg;
 }
 
-// Updates the average amount done per day for each habit
+/* Calcualates new average from data input 
+   and updates the "avgdata.txt" data file */
 void updateavg(std::string name, float todaysdata) {
-
   std::ifstream avgdata;
   avgdata.open("avgdata.txt");
   std::string word;
@@ -498,16 +539,18 @@ void updateavg(std::string name, float todaysdata) {
   float currentavg, newavg;
   int daysentered;
 
+  // Reads the file word by word, counting through each line
   while (avgdata >> word) {
     if (count == 1) {
       while (word.find('_', 1) != std::string::npos)
         word.replace(word.find('_', 1), 1, " ");
       tempname = word;
+      // see if the current line is the habit we are checking for
       if (tempname == name)
         isHabit = true;
-    } else if (count == 2 && isHabit)
+    } else if (count == 2 && isHabit) {
       currentavg = std::stof(word);
-    else if (count == 3 && isHabit) {
+    } else if (count == 3 && isHabit) {
       daysentered = std::stoi(word);
       break;
     }
@@ -518,9 +561,11 @@ void updateavg(std::string name, float todaysdata) {
 
   avgdata.close();
 
+  // calculate the new average and add another day entered
   newavg = (currentavg * daysentered + todaysdata) / (daysentered + 1);
   daysentered++;
 
+  // read from the file again to create a vector of string with each line
   avgdata.open("avgdata.txt");
   std::string theline;
   std::vector<string> updatedfile;
@@ -533,6 +578,7 @@ void updateavg(std::string name, float todaysdata) {
       name.at(i) = '_';
   }
 
+  // find the line to update and add the new information
   for (int i = 0; i < updatedfile.size(); i++) {
     if (updatedfile.at(i).find(name) != std::string::npos) {
       updatedfile.at(i) = name + " " + std::to_string(newavg)
@@ -542,6 +588,7 @@ void updateavg(std::string name, float todaysdata) {
 
   avgdata.close();
 
+  // output the data to the file again
   std::ofstream newdata;
   newdata.open("avgdata.txt", std::fstream::trunc);
 
@@ -550,4 +597,3 @@ void updateavg(std::string name, float todaysdata) {
 
   newdata.close();
 }
-
